@@ -1,12 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import supabase from '@/lib/supabase/client'
 import { Sparkles, ArrowRight, ArrowLeft, UploadCloud, X, CheckCircle2, Hammer, PaintRoller, Wrench, Zap, Leaf, Scissors, Package, Car, Ruler, Home as HomeIcon, DollarSign, Building, Monitor, Truck, Camera, Laptop, Users, Briefcase, Shield, Coins, Trash2, Droplets, Flame, Trees, Sofa, Lock } from 'lucide-react'
-
-// Force dynamic rendering to fix useSearchParams() issue
-export const dynamic = 'force-dynamic'
 
 type Category = { id: number; name: string }
 
@@ -37,7 +34,8 @@ const getCategoryIcon = (categoryName: string) => {
   return iconMap[categoryName] || HomeIcon
 }
 
-export default function NewJobPage() {
+// Component that uses useSearchParams - wrapped in Suspense
+function NewJobContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -1033,5 +1031,26 @@ export default function NewJobPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Loading component
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-[#F9F7F2]">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0009e2] mx-auto mb-4"></div>
+        <p className="text-gray-600">Laster siden...</p>
+      </div>
+    </div>
+  )
+}
+
+// Main component with Suspense boundary
+export default function NewJobPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <NewJobContent />
+    </Suspense>
   )
 }
