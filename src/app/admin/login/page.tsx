@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import supabase from '@/lib/supabase/client'
 
-export default function AdminLoginPage() {
+// Component that uses useSearchParams - wrapped in Suspense
+function AdminLoginContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -113,5 +114,34 @@ export default function AdminLoginPage() {
         </form>
       </div>
     </div>
+  )
+}
+
+// Loading component
+function AdminLoginLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#faf6f5' }}>
+      <div className="w-full max-w-md bg-white rounded-2xl shadow p-8">
+        <div className="flex items-center justify-center mb-6">
+          <div className="animate-pulse bg-gray-200 h-16 w-32 rounded"></div>
+        </div>
+        <div className="space-y-4">
+          <div className="animate-pulse bg-gray-200 h-4 w-32 rounded"></div>
+          <div className="animate-pulse bg-gray-200 h-10 w-full rounded"></div>
+          <div className="animate-pulse bg-gray-200 h-4 w-24 rounded"></div>
+          <div className="animate-pulse bg-gray-200 h-10 w-full rounded"></div>
+          <div className="animate-pulse bg-gray-200 h-10 w-full rounded"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Main component with Suspense boundary
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<AdminLoginLoading />}>
+      <AdminLoginContent />
+    </Suspense>
   )
 }
