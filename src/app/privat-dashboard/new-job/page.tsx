@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import supabase from '@/lib/supabase/client'
 import { Sparkles, ArrowRight, ArrowLeft, UploadCloud, X, CheckCircle2, Hammer, PaintRoller, Wrench, Zap, Leaf, Scissors, Package, Car, Ruler, Home as HomeIcon, DollarSign, Building, Monitor, Truck, Camera, Laptop, Users, Briefcase, Shield, Coins, Trash2, Droplets, Flame, Trees, Sofa, Lock } from 'lucide-react'
 
+// Force dynamic rendering to fix useSearchParams() issue
+export const dynamic = 'force-dynamic'
+
 type Category = { id: number; name: string }
 
 const isValidEmail = (email: string): boolean => {
