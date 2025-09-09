@@ -14,7 +14,9 @@ if (!supabaseKey) {
   throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is not defined in .env.local')
 }
 
-
 const supabase = createClient(supabaseUrl, supabaseKey)
+
+// Export the missing createSPAClient function that SSOButtons.tsx is trying to import
+export const createSPAClient = () => createClient(supabaseUrl, supabaseKey)
 
 export default supabase

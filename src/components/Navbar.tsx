@@ -28,11 +28,6 @@ export default function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
 
-  // Hide navbar on admin routes
-  if (pathname.startsWith('/admin')) {
-    return null
-  }
-
   // Ensure client-side mount
   useEffect(() => {
     setIsMounted(true)
@@ -42,7 +37,7 @@ export default function Navbar() {
   }, [setShowLoginModal])
 
   // Generate dynamic gradient - starts darkening at 14% (scroll 1-2 of 7)
-  const generateDynamicGradient = (progress: number) => {
+  const generateDynamicGradient = useCallback((progress: number) => {
     // Hero colors: from-[#0009e2] via-[#0009e2] to-[#001960]
     const startColor = '#0009e2'  // Always same as hero start
     const midColor = '#0009e2'    // Always same as hero middle
@@ -74,7 +69,7 @@ export default function Navbar() {
     const endColor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
     
     return `linear-gradient(to bottom right, ${startColor}, ${midColor}, ${endColor})`
-  }
+  }, [])
 
   // Handle scroll with precise hero tracking
   useEffect(() => {
@@ -128,7 +123,7 @@ export default function Navbar() {
         clearTimeout(scrollTimeoutRef.current)
       }
     }
-  }, [pathname])
+  }, [pathname, generateDynamicGradient])
 
   // Reset showLoginModal on route change
   useEffect(() => {
@@ -264,6 +259,11 @@ export default function Navbar() {
 
   const handleUngClick = () => {
     // Do nothing - coming soon feature
+  }
+
+  // Hide navbar on admin routes - moved after all hooks
+  if (pathname.startsWith('/admin')) {
+    return null
   }
 
   if (!isMounted) {
